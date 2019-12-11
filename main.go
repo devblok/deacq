@@ -16,15 +16,21 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer f.Close()
+
 	bufferedFile := bufio.NewReader(f)
 
 	csv, err := os.Create(filename + ".csv.gz")
 	if err != nil {
 		panic(err)
 	}
+	defer csv.Close()
 
 	gzipOutput := gzip.NewWriter(csv)
+	defer gzipOutput.Close()
+
 	bufferedOutput := bufio.NewWriter(gzipOutput)
+	defer bufferedOutput.Flush()
 
 	printCsvHeader(bufferedOutput, "PMT1 [volts]", "PMT2 [volts]", "PMT3 [volts]", "PMT4 [volts]", "Sorting pulse [volts]")
 
